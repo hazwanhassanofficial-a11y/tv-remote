@@ -1,0 +1,38 @@
+# Build the Android phone app for a test install. No release signing key is stored in GitHub.
+name: Android test build
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Accept SDK licences
+        run: yes | sdkmanager --licenses >/dev/null
+      - name: Build debug APK
+        run: |
+          cd app/gradle
+          ./gradlew --no-daemon --stacktrace :android:assembleDebug
+      - name: Verify APK
+        run: |
+          test -s app/android/build/outputs/apk/debug/android-debug.apk
+          ls -lh app/android/build/outputs/apk/debug/android-debug.apk
+      - name: Upload test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: tv-remote-android-test
+          path: app/android/build/outputs/apk/debug/android-debug.apk
+          if-no-files-found: error
+          retention-days: 14
