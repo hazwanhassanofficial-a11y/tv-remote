@@ -19,8 +19,11 @@ jobs:
           java-version: "17"
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-      - name: Accept SDK licences
-        run: yes | sdkmanager --licenses >/dev/null
+        with:
+          # The legacy SDK "tools" package has been removed from Google's repository.
+          # Gradle downloads the required platform/build-tools; this action only needs adb.
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
       - name: Build debug APK
         run: |
           cd app/gradle
