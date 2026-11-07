@@ -361,6 +361,7 @@ internal fun MainActivity.buildPicker() {
     }
     top.addView(set, LinearLayout.LayoutParams(dp(52), dp(44)))
     picker.addView(top)
+
     pickerMsg = label("", 14, ERR_TEXT)
     pickerMsg.background = box(ERR_BG, 12)
     pickerMsg.setPadding(dp(12), dp(10), dp(12), dp(10))
@@ -373,33 +374,44 @@ internal fun MainActivity.buildPicker() {
     up.topMargin = dp(12)
     picker.addView(updateBtn, up)
 
-    val savedHead = LinearLayout(this)                                // the heading, with "Several TVs" at its end once there are two
+    val savedCard = col()
+    savedCard.background = box(CARD, 18)
+    savedCard.setPadding(dp(12), dp(10), dp(12), dp(12))
+    val savedHead = LinearLayout(this)
     savedHead.gravity = android.view.Gravity.CENTER_VERTICAL
     savedHead.addView(head(T("picker.your_tvs")), LinearLayout.LayoutParams(0, -2, 1f))
     fleetBtn = fleetButton()
     screensBtn = screensButton()
     savedHead.addView(screensBtn, LinearLayout.LayoutParams(dp(42), dp(34)).apply { rightMargin = dp(6) })
     savedHead.addView(fleetBtn, LinearLayout.LayoutParams(-2, dp(34)))
-    picker.addView(savedHead, gap(14))
+    savedCard.addView(savedHead)
     savedList = col()
-    picker.addView(savedList)
-    if (irAvailable()) {                                              // no network, no TV picked: the phone's IR window (IrRemote.kt)
+    savedCard.addView(savedList, gap(6))
+    picker.addView(savedCard, gap(14))
+
+    if (irAvailable()) {
         val ir = button("@pulse|" + T("ir.title"), BTN)
         ir.setOnClickListener { irOpen() }
         picker.addView(ir, LinearLayout.LayoutParams(-1, dp(48)).apply { topMargin = dp(10) })
     }
 
-    picker.addView(head(T("picker.find_on_the_wi")), gap(18))
+    val scanCard = col()
+    scanCard.background = box(CARD, 18)
+    scanCard.setPadding(dp(12), dp(10), dp(12), dp(12))
+    scanCard.addView(head(T("picker.find_on_the_wi")))
     scanBtn = button("@search|" + T("picker.scan_the_wi_fi"), ACCENT)
     scanBtn.setOnClickListener { scan() }
-    val sp = LinearLayout.LayoutParams(-1, dp(48))
-    sp.topMargin = dp(6)
-    picker.addView(scanBtn, sp)
+    scanCard.addView(scanBtn, LinearLayout.LayoutParams(-1, dp(48)).apply { topMargin = dp(8) })
     foundList = col()
-    picker.addView(foundList)
+    scanCard.addView(foundList, gap(6))
+    picker.addView(scanCard, gap(14))
 
-    picker.addView(head(T("picker.type_the_tv_s")), gap(18))
+    val manualCard = col()
+    manualCard.background = box(CARD, 18)
+    manualCard.setPadding(dp(12), dp(10), dp(12), dp(10))
+    manualCard.addView(head(T("picker.type_the_tv_s")))
     val line = LinearLayout(this)
+    line.gravity = Gravity.CENTER_VERTICAL
     ipBox = input(T("picker.e_g_192_168"))
     ipBox.inputType = InputType.TYPE_CLASS_PHONE
     ipBox.imeOptions = EditorInfo.IME_ACTION_GO
@@ -410,18 +422,18 @@ internal fun MainActivity.buildPicker() {
     val go = icon("@right", T("page.connect"), ACCENT)
     go.setOnClickListener { typedIp(ipBox.text.toString())?.let { connect(it) } }
     line.addView(ipBox, LinearLayout.LayoutParams(0, dp(48), 1f))
-    val lp = LinearLayout.LayoutParams(-2, dp(48))
+    val lp = LinearLayout.LayoutParams(dp(60), dp(48))
     lp.leftMargin = dp(8)
-    lp.width = dp(60)
     line.addView(go, lp)
-    picker.addView(line, gap(6))
+    manualCard.addView(line, gap(8))
     val help = button(T("picker.how_to_connect"), 0)
     help.setTextColor(ACCENT_TEXT)
     help.setOnClickListener {
         Popup.Builder(this).setTitle(T("picker.how_to_connect")).setView(howSteps(T("picker.1_turn_on_adb"), T("setup.tcl_hidden_adb_short")))
             .setPositiveButton(T("setup_banner.got_it"), null).show()
     }
-    picker.addView(help, LinearLayout.LayoutParams(-1, dp(44)))
+    manualCard.addView(help, LinearLayout.LayoutParams(-1, dp(42)))
+    picker.addView(manualCard, gap(14))
 }
 
 /**
