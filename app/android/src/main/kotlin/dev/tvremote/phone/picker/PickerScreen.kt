@@ -346,10 +346,13 @@ internal fun MainActivity.buildPicker() {
     title.typeface = Typeface.DEFAULT_BOLD
     val top = LinearLayout(this)
     top.gravity = Gravity.CENTER_VERTICAL
+    top.background = box(CARD, 18)
+    top.setPadding(dp(14), dp(12), dp(10), dp(12))
     val names = col()
+    title.textSize = 22f
     names.addView(title)
     names.addView(label(T("picker.version", "v" to versionLine()), 12, MUTED))
-    top.addView(logo(40), LinearLayout.LayoutParams(dp(40), dp(40)).apply { rightMargin = dp(12) })
+    top.addView(logo(42), LinearLayout.LayoutParams(dp(42), dp(42)).apply { rightMargin = dp(12) })
     top.addView(names, LinearLayout.LayoutParams(0, -2, 1f))
     val set = icon("@settings", T("page.settings"), BTN)
     set.setOnClickListener {
