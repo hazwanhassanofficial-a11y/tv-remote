@@ -217,6 +217,8 @@ internal fun MainActivity.buildRemote() {
     bar.gravity = Gravity.CENTER_VERTICAL
     val head = LinearLayout(this)
     head.gravity = Gravity.CENTER_VERTICAL
+    head.background = box(CARD, 16)
+    head.setPadding(dp(2), dp(4), dp(4), dp(4))
     val leave = icon("@left", T("remote_screen.back_to_the_tvs"), BTN)   // where the logo was: the way out, without the phone's own Back
     leave.background = box(BTN, 16)
     @Suppress("DEPRECATION") leave.setOnClickListener { onBackPressed() }
@@ -278,7 +280,8 @@ internal fun MainActivity.buildRemote() {
     remote.addView(drawBar, LinearLayout.LayoutParams(-1, -2))
 
     controls = col()
-    controls.setPadding(dp(14), dp(12), dp(14), dp(20))
+    controls.background = box(CARD, 22)
+    controls.setPadding(dp(14), dp(14), dp(14), dp(20))
     // the picture's quality and full screen, first in the scrolling part: not on the picture (it covers nothing) nor fixed under it
     picBar = LinearLayout(this)
     picBar.gravity = Gravity.CENTER_VERTICAL
